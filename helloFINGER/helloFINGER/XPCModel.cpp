@@ -1,0 +1,112 @@
+#include "StdAfx.h"
+#include "XPCModel.h"
+
+#include "xpcapiconst.h"
+#include "xpcapi.h"
+
+/**---------------------------- constructor -----------------------------------//
+*/
+XPCModel::XPCModel(std::string ipAddress, std::string ipPort, std::string mdlName) {
+	if (xPCInitAPI()) {
+        fprintf(stderr, "Could not load api\n");
+        throw new std::exception("failed to load model");
+    }
+	
+	connectToTarget(ipAddress, ipPort);
+	loadControllerModel(mdlName);
+}
+
+/**------------------------- connect to the xpc target computer ---------------//
+*/
+void XPCModel::connectToTarget(std::string ipAddress, std::string ipPort) {
+	port = xPCOpenTcpIpPort(ipAddress.c_str() , ipPort.c_str());
+	checkError("PortOpen: ");
+}
+
+/**------------------------ load the dlm file for the controller --------------//
+* note: this assumes that the .mdl file is on the same path as the code.
+*/
+void XPCModel::loadControllerModel(std::string mdlName){
+	xPCLoadApp(port, ".", mdlName.c_str()); 
+	checkError("LoadApp: ");
+    printf("Application %s loaded, SampleTime: %g  StopTime: %g\n\n", mdlName, xPCGetSampleTime(port), xPCGetStopTime(port));
+    checkError(NULL);
+}
+
+/**---------------------------- check for particular error --------------------//
+* Checks for error by calling xPCGetLastError(); if an error is found, prints the 
+* appropriate error message and exits.         
+*/
+void XPCModel::checkError(char *str) {
+    char errMsg[80];
+    if (xPCGetLastError()) {
+        if (str != NULL)
+            fputs(str, stderr);
+        xPCErrorMsg(xPCGetLastError(), errMsg);
+        fputs(errMsg, stderr);
+        exit(EXIT_FAILURE);
+    }
+    return;
+}
+
+/**-------------------------------- find parameter id -------------------------//
+* Wrapper function around the xPCGetParamIdx() API call. Also checks to see if 
+* the parameter is not found, and exits in that case.                                                          
+*/
+int XPCModel::findParam(char *block, char *param) {
+    int tmp;
+    tmp = xPCGetParamIdx(port, block, param);
+    if (xPCGetLastError() || tmp == -1) {
+        fprintf(stderr, "Param %s/%s not found\n", block, param);
+        exit(EXIT_FAILURE);
+    }    
+    return tmp;
+} 
+
+/**------------------------------ find signal id ------------------------------//
+* Wrapper function around the xPCGetSignalIdx() API call. Also checks to see if 
+* the signal is not found, and exits in that case.                                                          
+*/
+int XPCModel::findSignal(char *sig) {
+    int tmp;
+    tmp = xPCGetSignalIdx(port, sig);
+    if (xPCGetLastError() || tmp == -1) {
+        fprintf(stderr, "Signal %s not found\n", sig);
+        exit(EXIT_FAILURE);
+    }    
+    return tmp;
+}
+
+/**------------------------- get a parameter from its id ----------------------//
+* Wrapper function around the xPCGetParam() API call. Also checks for error, and 
+* exits if an error is found.                     
+*/
+double XPCModel::getParamById(int paramIdx) {
+    double p;
+    xPCGetParam(port, paramIdx, &p);
+    checkError("GetParam: ");
+    return p;
+} 
+
+/**------------------------- get a signal from its id -------------------------//
+* Wrapper function around the xPCGetSignal() API call.                     
+*/
+double XPCModel::getSignalById(int id){
+	return xPCGetSignal(port, id);
+}
+
+/**----------------------------- set parameter --------------------------------//
+* Wrapper function around the xPCSetParam() API call. Also checks
+* for error, and exits if an error is found.                     
+*/
+void XPCModel::setParamById(int parIdx, double paramValue) {
+    xPCSetParam(port, parIdx, &paramValue);
+    checkError("SetParam: ");
+    return;
+}
+
+/**--------------------------- destructor -------------------------------------//
+*/
+XPCModel::~XPCModel(void) {
+	cleanUp();
+}
