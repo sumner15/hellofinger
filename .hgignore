@@ -24,6 +24,7 @@ syntax: glob
 *.lib
 *.sbr
 *.scc
+*.xml
 [Bb]in
 [Dd]ebug*/
 obj/

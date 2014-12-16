@@ -1,6 +1,17 @@
 ========================================================================
     CONSOLE APPLICATION : helloFINGER Project Overview
 ========================================================================
+NOTES:
+to use the xpcapi.dll dile in a c++ project, you need to add the files 
+"xpcinitfree.c", "xpcapi.h", and "xpcapiconst.h" to your project. you also need 
+to disable precompiled headers for the file "xpcinitfree.c". Finally, you need
+to put the xpcapi.dll file in the same directory as your executable. 
+
+The actual classes used to communicate with the finger robot are the XPCModel
+base class and the FingerBot class. These will of course need to be added to
+your project as well.
+
+
 
 AppWizard has created this helloFINGER application for you.
 

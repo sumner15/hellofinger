@@ -31,10 +31,10 @@
     <ClInclude Include="xpcapiconst.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="FingerBot.h">
+    <ClInclude Include="XPCModel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="XPCModel.h">
+    <ClInclude Include="FingerBot.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -48,10 +48,10 @@
     <ClCompile Include="xpcinitfree.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FingerBot.cpp">
+    <ClCompile Include="XPCModel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="XPCModel.cpp">
+    <ClCompile Include="FingerBot.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

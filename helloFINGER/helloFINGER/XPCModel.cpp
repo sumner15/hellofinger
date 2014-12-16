@@ -1,5 +1,6 @@
 #include "StdAfx.h"
 #include "XPCModel.h"
+#include <windows.h>
 
 #include "xpcapiconst.h"
 #include "xpcapi.h"
@@ -29,7 +30,7 @@ void XPCModel::connectToTarget(std::string ipAddress, std::string ipPort) {
 void XPCModel::loadControllerModel(std::string mdlName){
 	xPCLoadApp(port, ".", mdlName.c_str()); 
 	checkError("LoadApp: ");
-    printf("Application %s loaded, SampleTime: %g  StopTime: %g\n\n", mdlName, xPCGetSampleTime(port), xPCGetStopTime(port));
+    printf("Application %s loaded, SampleTime: %g  StopTime: %g\n\n", mdlName.c_str(), xPCGetSampleTime(port), xPCGetStopTime(port));
     checkError(NULL);
 }
 
@@ -105,8 +106,21 @@ void XPCModel::setParamById(int parIdx, double paramValue) {
     return;
 }
 
+/**------------------------- release all the things ---------------------------//
+* Called at program termination to exit in a clean way.          
+*/
+void XPCModel::cleanUp(void) {
+    xPCClosePort(port);
+    xPCFreeAPI();
+	port = 0;
+    return;
+}
+
 /**--------------------------- destructor -------------------------------------//
 */
 XPCModel::~XPCModel(void) {
-	cleanUp();
+	if (port){
+		cleanUp();
+	}
+	
 }
