@@ -15,6 +15,7 @@ XPCModel::XPCModel(std::string ipAddress, std::string ipPort, std::string mdlNam
 	
 	connectToTarget(ipAddress, ipPort);
 	loadControllerModel(mdlName);
+	xPCStartApp(port);
 }
 
 /**------------------------- connect to the xpc target computer ---------------//
@@ -110,7 +111,9 @@ void XPCModel::setParamById(int parIdx, double paramValue) {
 * Called at program termination to exit in a clean way.          
 */
 void XPCModel::cleanUp(void) {
-    xPCClosePort(port);
+    xPCStopApp(port);
+	xPCUnloadApp(port);
+	xPCClosePort(port);
     xPCFreeAPI();
 	port = 0;
     return;

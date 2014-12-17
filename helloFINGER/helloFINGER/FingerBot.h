@@ -7,8 +7,25 @@ class FingerBot : public XPCModel {
 public:
 	FingerBot(std::string ipAddress, std::string ipPort, std::string mdlName);
 	~FingerBot(void);
+	void setForcesOn(bool forceOn);
+	void setHandMode(std::string handedness);
+	void autoSetHandMode();
+	void setHitTimes(double hitTime,int fNum);
+	void setHitPos(double pos,int fNum );
+	void setTrajMode(double setting);
+	void zeroPropGains();
+	void zeroDifGains();
+	void setKp(double kp, int finger);
+	void setKd(double kd, int finger);
+	void setGain(double val, int fnum, std::string key1, std::string key2);
+	std::string checkGainInRange(double val, bool propGain);
+	void setGainChangeRate(double rate);
+	void FingerBot::getPropGains(double& kp1, double& kp2);
+	void setViscGains(double gain, int fNum);
 
 private:
+	bool rightHandMode;
+
 	double	getParamByName(std::string paramName);
 	void	setParamByName(std::string paramName, double paramValue);
 	double	getSignalByName(std::string signalName);
@@ -16,6 +33,18 @@ private:
 	typedef std::map<std::string, int> IdMap; 
 	IdMap	signalMap;
 	IdMap	paramMap;
+
+	struct UpcomingMove{
+		int fNum;
+		double time;
+	};
+	UpcomingMove upcomingMove; 
+
+	static const double leftOrientAccel;  // the are probably machine dependant, so it is dumb for us to drop them here as if they are reliable constants - Just thought we should let you know that we know that.                                                                                                                                                                                                                                                             have a nice day.
+	static const double rightOrientAccel;
+
+	static const double KpRange[2]; 
+    static const double KdRange[2];
 
 };
 
