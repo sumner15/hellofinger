@@ -64,6 +64,14 @@ void FingerBot::autoSetHandMode(){
 	}
 }
 
+
+/**----------------------------- set movement duration ------------------------//
+'' duration argument is in miliseconds
+*/
+void FingerBot::setMovementDuration(double dur){
+    setParamByName("fixedDur", dur / 1000);
+}
+
 /**---------------------------- set hit times ---------------------------------//
 fNum 0 means move top finger. fnum 1 means move bottom finger. fNum 2 means move 
 both fingers.
@@ -74,11 +82,14 @@ void FingerBot::setHitTimes(double hitTime,int fNum){
 	switch(fNum){
 	case 0:
         setParamByName("hitTime1", (hitTime / 1000.0));
+		break;
 	case 1:
         setParamByName("hitTime2", (hitTime / 1000.0));
+		break;
 	case 2:
         setParamByName("hitTime1", (hitTime / 1000.0));
         setParamByName("hitTime2", (hitTime / 1000.0));
+		break;
 	}
 	std::cout << "set hit time to " << hitTime << "for finger code " << fNum << std::endl;
 }

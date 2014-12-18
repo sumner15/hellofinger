@@ -10,6 +10,7 @@ public:
 	void setForcesOn(bool forceOn);
 	void setHandMode(std::string handedness);
 	void autoSetHandMode();
+	void setMovementDuration(double dur);
 	void setHitTimes(double hitTime,int fNum);
 	void setHitPos(double pos,int fNum );
 	void setTrajMode(double setting);
