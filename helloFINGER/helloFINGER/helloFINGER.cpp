@@ -22,11 +22,11 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	FingerBot finger = FingerBot(ipAddress, ipPort, modelName);
 	finger.setForcesOn(true);
-	finger.setKp(2.0, 2.0);
-	finger.setKp(0.2, 2.0);
-	finger.setTrajMode(1.0); // mode 2 is auto trajectory
-	finger.setHitPos(0.7, 1.0);
-	finger.setHitTimes(7000.0, 1.0);
+	finger.setKp(2.0, 2);
+	finger.setKd(0.2, 2);
+	finger.setTrajMode(2.0); // mode 2 is auto trajectory
+	finger.setHitPos(0.7, 1);
+	finger.setHitTimes(10000.0, 0);
 	int i = 0;
 	while(i<20){
 		 Sleep(1000); 

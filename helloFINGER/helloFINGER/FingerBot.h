@@ -17,7 +17,6 @@ public:
 	void zeroDifGains();
 	void setKp(double kp, int finger);
 	void setKd(double kd, int finger);
-	void setGain(double val, int fnum, std::string key1, std::string key2);
 	std::string checkGainInRange(double val, bool propGain);
 	void setGainChangeRate(double rate);
 	void FingerBot::getPropGains(double& kp1, double& kp2);

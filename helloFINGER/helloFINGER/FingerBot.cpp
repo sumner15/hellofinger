@@ -8,7 +8,8 @@
 const double  FingerBot::KpRange[2] = {-1.0, 20.0};
 const double  FingerBot::KdRange[2] = {-0.3, 1};
 
-const double FingerBot::leftOrientAccel  = 0.08583;  // the are probably machine dependant, so it is dumb for us to drop them here as if they are reliable constants - Just thought we should let you know that we know that.                                                                                                                                                                                                                                                             have a nice day.
+// the are probably machine dependant, so it is dumb for us to drop them here as if they are reliable constants - Just thought we should let you know that we know that.                                                                                                                                                                                                                                                             have a nice day.
+const double FingerBot::leftOrientAccel  = 0.08583;  
 const double FingerBot::rightOrientAccel = 0.01418;
 
 FingerBot::FingerBot(std::string ipAddress, std::string ipPort, std::string mdlName) : XPCModel(ipAddress, ipPort, mdlName){
@@ -108,7 +109,7 @@ void FingerBot::setHitPos(double pos,int fNum ){
 setting trajMode to:
 1 will put us in subject-initiated trajectory mode.
 2 will put us in auto trajectory mode
-3 will put us in auto trajectory mode, but extension must be initiated by subject
+3 will put us in auto trajectory mode without extensions (just moves to a point)
 */
 void FingerBot::setTrajMode(double setting){
     if (setting < 1 || setting > 4){
@@ -134,15 +135,17 @@ void FingerBot::zeroDifGains(){
 /**--------------------------- set Kd gains together --------------------------//
 */
 void FingerBot::setKp(double kp, int finger){    
-	std::string gainKey1 = "Kp1";
-	std::string gainKey2 = "Kp2";
-    std::string response = checkGainInRange(kp, true);
-    if (response.compare("good")){
-        setGain(kp, finger, gainKey1, gainKey2);
-	} else if (response.compare("tooLow")) { 
-        setGain(FingerBot::KpRange[0], finger, gainKey1, gainKey2);
-    } else if (response.compare("tooHigh")) { 
-        setGain(FingerBot::KpRange[1], finger, gainKey1, gainKey2);
+	switch (finger){
+	case 0:
+		setParamByName("Kp1", kp);
+		break;
+	case 1:
+		setParamByName("Kp2", kp);
+		break;
+	case 2:
+		setParamByName("Kp1", kp);
+		setParamByName("Kp2", kp);
+		break;
 	}
     std::cout << "kp set" << std::endl;
 }
@@ -150,32 +153,21 @@ void FingerBot::setKp(double kp, int finger){
 /**--------------------------- set Kd gains together --------------------------//
 */
 void FingerBot::setKd(double kd, int finger){
-    std::string gainKey1 = "Kd1";
-	std::string gainKey2 = "Kd2";
-    std::string response = checkGainInRange(kd, false);	
-    if (response.compare("good")){
-        setGain(kd, finger, gainKey1, gainKey2);
-    } else if (response.compare("tooLow")) {
-        setGain(FingerBot::KdRange[0], finger, gainKey1, gainKey2);
-    } else if (response.compare("tooHigh")) { 
-        setGain(FingerBot::KdRange[1], finger, gainKey1, gainKey2);
-    }
-    std::cout << "kd set" << std::endl;
-}
+    
+	switch (finger){
+	case 0:
+		setParamByName("Kd1", kd);
+		break;
+	case 1:
+		setParamByName("Kd2", kd);
+		break;
+	case 2:
+		setParamByName("Kd1", kd);
+		setParamByName("Kd2", kd);
+		break;
+	}
 
-/**--------------------- generic gain setting function ------------------------//
-*/
-void FingerBot::setGain(double val, int fnum, std::string key1, std::string key2){
-    if (fnum == 0){
-        setParamByName(key1, val);
-    } else if (fnum == 1) { 
-        setParamByName(key2, val);
-    } else if (fnum == 2) { 
-        setParamByName(key1, val);
-        setParamByName(key2, val);
-	} else {
-        throw new std::exception("the 'finger' argument must be either 1 (index) 2 (middle) or 3 (both)");	        
-    }
+    std::cout << "kd set" << std::endl;
 }
 
 /**------------------------- check gains in range -----------------------------//
@@ -199,6 +191,8 @@ std::string FingerBot::checkGainInRange(double val, bool propGain){
 }
 
 /**---------------------------- set gainChange Rate ---------------------------//
+* sets the amount of time it takes to change from one gain value to another - 
+* this is not instantaneous because the controller does not like discontinuities.
 */
 void FingerBot::setGainChangeRate(double rate){
     if (rate >= 0.001){
@@ -238,6 +232,7 @@ double FingerBot::getParamByName(std::string paramName){
 */
 void FingerBot::setParamByName(std::string paramName, double paramValue){
 	setParamById(paramMap[paramName], paramValue);
+	std::cout << paramName << " set to " << getParamByName(paramName) << std::endl;
 }
 
 /**------------------------- get signal from name -----------------------------//
