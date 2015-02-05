@@ -16,7 +16,8 @@ using namespace std;
 int _tmain(int argc, _TCHAR* argv[])
 {	
 	
-	string ipAddress = "129.101.53.73";
+	//string ipAddress = "129.101.53.73";		// UCI IP address 
+	string ipAddress = "169.254.201.253";		// Wadsworth IP address
 	string ipPort = "22222";
 	string modelName = "FingerEAERCtrl";
 
@@ -26,17 +27,18 @@ int _tmain(int argc, _TCHAR* argv[])
 	finger.setForcesOn(true);
 	finger.setKp(2.0, 2);
 	finger.setKd(0.2, 2);
+	double curPos1; //initialize position var to print later
 
 	finger.setTrajMode(2.0);		// mode 2 is auto trajectory
 	finger.setHitPos(0.9, 0);		//movement range set for top finger
 	finger.setHitPos(0.2, 1);	    //movement range set for bottom finger
 	finger.setHitTimes(10250.0, 0); //top finger moves at 10.25 sec
 	finger.setHitTimes(12000.0, 1); //bottom finger moves at 12.0 sec
-	finger.setMovementDuration(500);//movement duration = 500ms
+	finger.setMovementDuration(500);//movement duration = 500ms		
 	int i = 0;
 	while(i<15){
-		 Sleep(1000); 
-		 cout << "seconds = " << i+1 << "\t";
+		 Sleep(1000); 		 		
+		 cout << "seconds = " << i+1 << "\t";		 
 		 i++;
 	}
 
@@ -47,7 +49,8 @@ int _tmain(int argc, _TCHAR* argv[])
 	cout << endl;
 	while(i<5){
 		 Sleep(1000); 
-		 cout << "seconds = " << i+1 << "\t";
+		 curPos1 = finger.getPos1();
+		 cout << "position= " << curPos1 << "\t";
 		 i++;
 	}
 	

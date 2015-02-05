@@ -4,7 +4,7 @@ Sumner Norman
 Justin Rowe
 
 Placement of Libraries: 
-XPCCOMAPI.DLL needs to be in the same folder as the executable
+xpcapi.dll needs to be in the same folder as the executable
 (e.g. C:\Users\...\helloFINGERproject\helloFINGER\Debug)
 
 Precompiled headers for xpcinitfree.c must be turned off!

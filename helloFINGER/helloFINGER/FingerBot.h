@@ -21,6 +21,8 @@ public:
 	std::string checkGainInRange(double val, bool propGain);
 	void setGainChangeRate(double rate);
 	void FingerBot::getPropGains(double& kp1, double& kp2);
+	double FingerBot::getPos1();
+	double FingerBot::getPos2();
 	void setViscGains(double gain, int fNum);
 
 private:

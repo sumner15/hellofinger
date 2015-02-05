@@ -220,6 +220,15 @@ void FingerBot::getPropGains(double& kp1, double& kp2){
     kp2 = getSignalByName("Kp2");
 }
 
+/**-------------------------- get the robot positions -------------------------//
+*/
+double FingerBot::getPos1(){
+	return getSignalByName("pos1");	
+}
+double FingerBot::getPos2(){
+	return getSignalByName("pos1");	
+}
+
 /**----------------------- set the purse viscosity gains ----------------------//
 */
 void FingerBot::setViscGains(double gain, int fNum){
