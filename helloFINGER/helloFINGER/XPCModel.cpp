@@ -1,6 +1,7 @@
 #include "StdAfx.h"
 #include "XPCModel.h"
 #include <windows.h>
+#include <iostream>
 
 #include "xpcapiconst.h"
 #include "xpcapi.h"
@@ -12,7 +13,7 @@ XPCModel::XPCModel(std::string ipAddress, std::string ipPort, std::string mdlNam
         fprintf(stderr, "Could not load api\n");
         throw new std::exception("failed to load model");
     }
-	
+	std::cout << "port is " << port;
 	connectToTarget(ipAddress, ipPort);
 	loadControllerModel(mdlName);
 	xPCStartApp(port);
@@ -21,7 +22,9 @@ XPCModel::XPCModel(std::string ipAddress, std::string ipPort, std::string mdlNam
 /**------------------------- connect to the xpc target computer ---------------//
 */
 void XPCModel::connectToTarget(std::string ipAddress, std::string ipPort) {
-	port = xPCOpenTcpIpPort(ipAddress.c_str() , ipPort.c_str());
+	int port_ = xPCOpenTcpIpPort(ipAddress.c_str() , ipPort.c_str());
+	port = port_;
+	//port = xPCOpenTcpIpPort(ipAddress.c_str() , ipPort.c_str());
 	checkError("PortOpen: ");
 }
 

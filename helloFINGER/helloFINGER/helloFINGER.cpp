@@ -16,8 +16,8 @@ using namespace std;
 int _tmain(int argc, _TCHAR* argv[])
 {	
 	
-	//string ipAddress = "129.101.53.73";		// UCI IP address 
-	string ipAddress = "169.254.201.253";		// Wadsworth IP address
+	string ipAddress = "129.101.53.73";		// UCI IP address 
+	//string ipAddress = "169.254.201.253";		// Wadsworth IP address
 	string ipPort = "22222";
 	string modelName = "FingerEAERCtrl";
 
