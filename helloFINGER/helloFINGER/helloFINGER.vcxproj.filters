@@ -16,6 +16,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
+    <None Include="..\Debug\xpcapi.dll" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
