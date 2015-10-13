@@ -226,7 +226,7 @@ double FingerBot::getPos1(){
 	return getSignalByName("pos1");	
 }
 double FingerBot::getPos2(){
-	return getSignalByName("pos1");	
+	return getSignalByName("pos2");	
 }
 
 /**----------------------- set the purse viscosity gains ----------------------//
