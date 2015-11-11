@@ -24,6 +24,7 @@ public:
 	double FingerBot::getPos1();
 	double FingerBot::getPos2();
 	void setViscGains(double gain, int fNum);
+	double FingerBot::getTargetTime();
 
 private:
 	bool rightHandMode;

@@ -28,6 +28,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	finger.setKp(2.0, 2);
 	finger.setKd(0.2, 2);
 	double curPos1; //initialize position var to print later
+	double currentTargetTime; // initialize target time to print later
 
 	finger.setTrajMode(2.0);		// mode 2 is auto trajectory
 	finger.setHitPos(0.9, 0);		//movement range set for top finger
@@ -38,7 +39,9 @@ int _tmain(int argc, _TCHAR* argv[])
 	int i = 0;
 	while(i<15){
 		 Sleep(1000); 		 		
-		 cout << "seconds = " << i+1 << "\t";		 
+		 cout << "application time = " << i+1 << endl;		 
+		 currentTargetTime = finger.getTargetTime();		 
+		 cout << "target time      = " << currentTargetTime << endl;
 		 i++;
 	}
 

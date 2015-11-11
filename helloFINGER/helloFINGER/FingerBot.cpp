@@ -242,6 +242,13 @@ void FingerBot::setViscGains(double gain, int fNum){
     }
 }
 
+/** ---------------------------- get target time ------------------------------//
+*/
+double FingerBot::getTargetTime(){
+	double currentTargetTime = getSignalByName("targetTime");
+	return currentTargetTime;
+}
+
 /**------------------------- get parameter from name --------------------------//
 */
 double FingerBot::getParamByName(std::string paramName){
