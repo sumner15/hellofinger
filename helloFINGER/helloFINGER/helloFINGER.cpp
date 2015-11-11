@@ -38,10 +38,12 @@ int _tmain(int argc, _TCHAR* argv[])
 	finger.setMovementDuration(500);//movement duration = 500ms		
 	int i = 0;
 	while(i<15){
-		 Sleep(1000); 		 		
-		 cout << "application time = " << i+1 << endl;		 
+		 Sleep(1000); 		 
+	     curPos1 = finger.getPos1();
+		 cout << "position= " << curPos1 << endl;
+		 cout << "application time = " << i+1 << "\t" ;		 
 		 currentTargetTime = finger.getTargetTime();		 
-		 cout << "target time      = " << currentTargetTime << endl;
+		 cout << "target time = " << currentTargetTime << endl;
 		 i++;
 	}
 
@@ -53,7 +55,10 @@ int _tmain(int argc, _TCHAR* argv[])
 	while(i<5){
 		 Sleep(1000); 
 		 curPos1 = finger.getPos1();
-		 cout << "position= " << curPos1 << "\t";
+		 cout << "position= " << curPos1 << endl;
+		 cout << "application time = " << i+1 << "\t" ;		 
+		 currentTargetTime = finger.getTargetTime();		 
+		 cout << "target time = " << currentTargetTime << endl;
 		 i++;
 	}
 	
