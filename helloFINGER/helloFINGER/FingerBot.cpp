@@ -91,7 +91,7 @@ void FingerBot::setHitTimes(double hitTime,int fNum){
         setParamByName("hitTime2", (hitTime / 1000.0));
 		break;
 	}
-	std::cout << "set hit time to " << hitTime << "for finger code " << fNum << std::endl;
+	//std::cout << "set hit time to " << hitTime << "for finger code " << fNum << std::endl;
 }
 
 /**-------------------------- change the target position ----------------------//
