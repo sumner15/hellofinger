@@ -1,13 +1,32 @@
 // helloFINGER.cpp : Defines the entry point for the console application.
-//
 
+// libraries 
 #include "stdafx.h"
 #include <windows.h>
 #include "FingerBot.h"
 #include <iostream>
-
 using namespace std;
 
+// define common vars
+double curPos1; //initialize position var to print later
+double currentTargetTime; // initialize target time to print later
+double ctt; //movement time (target timer)
+
+// set parameters to connect to XPC target machine (initialize fingerbot)
+string ipAddress =	"129.101.53.73";		// UCI IP address 
+/*string ipAddress = "169.254.201.253";		// Wadsworth IP address */
+string ipPort =		"22222";
+string modelName =	"FingerEAERCtrl";		 
+FingerBot finger = FingerBot(ipAddress, ipPort, modelName);
+
+// function to print updates to the console
+void printUpdate()
+{
+	curPos1 = finger.getPos1();
+	cout << "\n position= " << curPos1 << "\t" ;		 		 
+	currentTargetTime = finger.getTargetTime();		 
+	cout << "target time = " << currentTargetTime << endl;
+}
 
 
 /**-------------------------- This is where it all begins ---------------------//
@@ -15,53 +34,49 @@ using namespace std;
 */
 int _tmain(int argc, _TCHAR* argv[])
 {	
-	
-	// set parameters to connect to XPC target machine (initialize fingerbot)
-	string ipAddress = "129.101.53.73";		// UCI IP address 
-	//string ipAddress = "169.254.201.253";		// Wadsworth IP address
-	string ipPort = "22222";
-	string modelName = "FingerEAERCtrl";		 
-    FingerBot finger = FingerBot(ipAddress, ipPort, modelName);
- 
-    // set FINGER parameters for an initial move (one move for each finger)
+    // set FINGER movement parameters 
     finger.setForcesOn(true);
     finger.setKp(2.0, 2);
     finger.setKd(0.2, 2);	             
-    finger.setTrajMode(3.0);                                	
+    finger.setTrajMode(3.0);                
 
-	// define 
-	double curPos1; //initialize position var to print later
-	double currentTargetTime; // initialize target time to print later
-	double ctt; //movement time (target timer)
-     
-	// create one flexion and extension, separately
-	ctt= 10000.0 + 1000.0 * finger.getTargetTime();                   
-    finger.setHitPos(0.9,0);
-    finger.setHitTimes(ctt,0);  
-	finger.setMovementDuration(500);
-	
-	while(finger.getTargetTime()*1000.0 < ctt+1000){
-		 Sleep(250); 		 
-	     curPos1 = finger.getPos1();
-		 cout << "\n position= " << curPos1 << "\t" ;		 		 
-		 currentTargetTime = finger.getTargetTime();		 
-		 cout << "target time = " << currentTargetTime << endl;		 
+	double extendPos = 1;
+	double extendTime = .4;
+	double flexPos = 0;
+	double flexTime = .4;
+	int fingerToUse = 0;
+	double moveDur = 300; //NOTE: extendTime & flexTime must be > moveDur!!!
+
+	// wait for initialization
+	while(finger.getTargetTime() < 5){
+		Sleep(250);
+		printUpdate();
+	}
+
+	// extension 		
+	ctt= 1000.0*extendTime + 1000.0*finger.getTargetTime();                   
+    finger.setHitPos(extendPos,fingerToUse);    
+	finger.setMovementDuration(moveDur);
+	finger.setHitTimes(ctt,fingerToUse);  
+	while(finger.getTargetTime()*1000.0 < ctt+moveDur){
+		Sleep(250); 		 
+		printUpdate();	 
 	}       
+	Sleep(1000); 
 
-	ctt= 2000.0 + 1000.0 * finger.getTargetTime();                    
-    finger.setHitPos(0.1,0);
-    finger.setHitTimes(ctt,0);
-	finger.setMovementDuration(500);    
-	
-	while(finger.getTargetTime()*1000.0 < ctt+1000){
-		 Sleep(250); 		 
-	     curPos1 = finger.getPos1();
-		 cout << "\n position= " << curPos1 << "\t" ;		 	 
-		 currentTargetTime = finger.getTargetTime();		 
-		 cout << "target time = " << currentTargetTime << endl;		 
-	}  
+	// flexion 
+	ctt= 1000.0*flexTime + 1000.0*finger.getTargetTime();                    
+    finger.setHitPos(flexPos,fingerToUse);    
+	finger.setMovementDuration(moveDur);    
+	finger.setHitTimes(ctt,fingerToUse);
+	while(finger.getTargetTime()*1000.0 < ctt+moveDur){
+		Sleep(250); 		 
+		printUpdate();	 
+	} 
+	Sleep(1000);
       
-	Sleep(10000);
+	// display results and clean up
+	Sleep(5000);
     finger.cleanUp();
     return 0;
 }
