@@ -40,10 +40,10 @@ int _tmain(int argc, _TCHAR* argv[])
     finger.setKd(0.2, 2);	             
     finger.setTrajMode(3.0);                
 
-	double extendPos = 1;
-	double extendTime = .4;
-	double flexPos = 0;
+	double flexPos = 1;
 	double flexTime = .4;
+	double extendPos = 0;
+	double extendTime = 1.2;
 	int fingerToUse = 0;
 	double moveDur = 300; //NOTE: extendTime & flexTime must be > moveDur!!!
 
@@ -53,23 +53,22 @@ int _tmain(int argc, _TCHAR* argv[])
 		printUpdate();
 	}
 
-	// extension 		
-	ctt= 1000.0*extendTime + 1000.0*finger.getTargetTime();                   
-    finger.setHitPos(extendPos,fingerToUse);    
+	// flexion 		
+	ctt= 1000.0*flexTime + 1000.0*finger.getTargetTime();                   
+    finger.setHitPos(flexPos,fingerToUse);    
 	finger.setMovementDuration(moveDur);
 	finger.setHitTimes(ctt,fingerToUse);  
-	while(finger.getTargetTime()*1000.0 < ctt+moveDur){
+	while(finger.getTargetTime()*1000.0 < ctt+2*moveDur){
 		Sleep(250); 		 
 		printUpdate();	 
-	}       
-	Sleep(1000); 
+	}       	
 
-	// flexion 
-	ctt= 1000.0*flexTime + 1000.0*finger.getTargetTime();                    
-    finger.setHitPos(flexPos,fingerToUse);    
+	// extension 
+	ctt= 1000.0*extendTime + 1000.0*finger.getTargetTime();                    
+    finger.setHitPos(extendPos,fingerToUse);    
 	finger.setMovementDuration(moveDur);    
 	finger.setHitTimes(ctt,fingerToUse);
-	while(finger.getTargetTime()*1000.0 < ctt+moveDur){
+	while(finger.getTargetTime()*1000.0 < ctt+2*moveDur){
 		Sleep(250); 		 
 		printUpdate();	 
 	} 
