@@ -14,6 +14,9 @@ public:
 	void setHitTimes(double hitTime,int fNum);
 	void setHitPos(double pos,int fNum );
 	void setTrajMode(double setting);
+	void setVThresh(double setting);
+	void setFThresh(double setting);
+	void setMaxTrajDur(double setting);
 	void zeroPropGains();
 	void zeroDifGains();
 	void setKp(double kp, int finger);

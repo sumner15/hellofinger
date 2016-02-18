@@ -131,6 +131,22 @@ void FingerBot::setTrajMode(double setting){
 	std::cout << "set trajectory mode to " << setting << std::endl;
 }
 
+/**------------------------ set mode 1 parameters ------------------------//
+velocity threshold: v_thresh
+force theshold: f_thresh
+maximum trajectory duration: max_traj_dur
+*/
+void FingerBot::setVThresh(double setting){    
+    setParamByName("v_thresh", setting);
+}
+void FingerBot::setFThresh(double setting){
+	setParamByName("f_thresh", setting);
+}
+void FingerBot::setMaxTrajDur(double setting){
+	setParamByName("maxTrajDur", setting);
+}
+
+
 /**--------------------- set the proportional gains to zero -------------------//
 */
 void FingerBot::zeroPropGains(){

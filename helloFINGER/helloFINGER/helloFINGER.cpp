@@ -38,14 +38,20 @@ int _tmain(int argc, _TCHAR* argv[])
     finger.setForcesOn(true);
     finger.setKp(2.0, 2);
     finger.setKd(0.2, 2);	             
-    finger.setTrajMode(3.0);                
+    finger.setTrajMode(1.0);          
 
+	// mode 1 settings (if necessary)
+	finger.setVThresh(0.01);
+	finger.setFThresh(0.01);
+	finger.setMaxTrajDur(10000);
+
+	// movement parameters
 	double flexPos = 1;
-	double flexTime = .4;
+	double flexTime = 1.4;
 	double extendPos = 0;
 	double extendTime = 1.2;
 	int fingerToUse = 0;
-	double moveDur = 300; //NOTE: extendTime & flexTime must be > moveDur!!!
+	double moveDur = 2000; //NOTE: extendTime & flexTime must be > moveDur!!!
 
 	// wait for initialization
 	while(finger.getTargetTime() < 5){
@@ -63,7 +69,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		printUpdate();	 
 	}       	
 
-	// extension 
+	/*// extension 
 	ctt= 1000.0*extendTime + 1000.0*finger.getTargetTime();                    
     finger.setHitPos(extendPos,fingerToUse);    
 	finger.setMovementDuration(moveDur);    
@@ -72,7 +78,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		Sleep(250); 		 
 		printUpdate();	 
 	} 
-	Sleep(1000);
+	Sleep(1000);*/
       
 	// display results and clean up
 	Sleep(5000);
