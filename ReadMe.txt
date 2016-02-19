@@ -1,11 +1,17 @@
 ReadMe file for setting up helloFINGER
-12/18/2014
+rev. 02/19/16
 Sumner Norman
-Justin Rowe
+
+helloFINGER is a demo program meant to facilitate communication between a c++ 
+environment such as BCI2000 and the xPC target environment. The key classes are
+FingerBot & XPCModel which (using their dependencies) facilitate communication
+with the FINGER robot. helloFINGER.cpp is an example program that demonstrates
+a subset of the functionality possible with the FINGER robot. See the fingerbot
+class for further functionality.
 
 Placement of Libraries: 
-xpcapi.dll needs to be in the same folder as the executable
-(e.g. C:\Users\...\helloFINGERproject\helloFINGER\Debug)
+xpcapi.dll needs to be in the same folder as the executables
+(e.g. C:\Users\...\helloFINGERproject\helloFINGER\Release)
 
 Precompiled headers for xpcinitfree.c must be turned off!
 Make sure you also turn off the ForcedInclude.. .pch file in the xpcinitfree.c 
@@ -17,6 +23,3 @@ Files needed in the same folder as the source code:
 -xpcinitfree.c
 -FingerEAERCtrl.dlm
 
-Classes to be included:
--FingerBot.h / FingerBot.cpp
--XPCModel.h / XPCModel.cpp

@@ -41,14 +41,15 @@ int _tmain(int argc, _TCHAR* argv[])
     finger.setTrajMode(1.0);          
 
 	// mode 1 settings (if necessary)
-	finger.setVThresh(0.01);
-	finger.setFThresh(0.01);
-	finger.setMaxTrajDur(10000);
+	finger.setVThresh(0.2227);
+	finger.setFThresh(0.29);
+	finger.setMaxTrajDur(0.75);
 
 	// movement parameters
 	double flexPos = 1;
 	double flexTime = 1.4;
 	double extendPos = 0;
+
 	double extendTime = 1.2;
 	int fingerToUse = 0;
 	double moveDur = 2000; //NOTE: extendTime & flexTime must be > moveDur!!!
@@ -81,7 +82,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	Sleep(1000);*/
       
 	// display results and clean up
-	Sleep(5000);
+	Sleep(2000);
     finger.cleanUp();
     return 0;
 }
