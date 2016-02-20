@@ -335,11 +335,9 @@ void FingerBot::loadIdMap(){
     paramMap.insert(std::make_pair("trajMode",findParam("parameters/parTrajMode", "Gain")));
     paramMap.insert(std::make_pair("maxTrajDur",findParam("parameters/parMaxTrajDur", "Gain")));
     paramMap.insert(std::make_pair("fixedDur",findParam("parameters/parFixedDur", "Gain")));
-    paramMap.insert(std::make_pair("marker",findParam("parameters/parMarker", "Gain")));
-    paramMap.insert(std::make_pair("returnMuter",findParam("parameters/parExtClamp", "Gain")));
+    paramMap.insert(std::make_pair("marker",findParam("parameters/parMarker", "Gain")));    
     paramMap.insert(std::make_pair("forceTrigger",findParam("parameters/parForceTrigger", "Gain")));
-    paramMap.insert(std::make_pair("wiggleAmp",findParam("parameters/parWiggleAmp", "Gain")));
-    paramMap.insert(std::make_pair("blockerOn",findParam("parameters/parBlocker", "Gain")));
+    paramMap.insert(std::make_pair("wiggleAmp",findParam("parameters/parWiggleAmp", "Gain")));    
     paramMap.insert(std::make_pair("softStopPos",findParam("parameters/parPStop", "Gain")));
 }
 

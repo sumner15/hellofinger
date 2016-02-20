@@ -25,7 +25,8 @@ void printUpdate()
 	curPos1 = finger.getPos1();
 	cout << "\n position= " << curPos1 << "\t" ;		 		 
 	currentTargetTime = finger.getTargetTime();		 
-	cout << "target time = " << currentTargetTime << endl;
+	cout << "target time = " << currentTargetTime << endl;	
+	Sleep(250); 		
 }
 
 
@@ -34,55 +35,62 @@ void printUpdate()
 */
 int _tmain(int argc, _TCHAR* argv[])
 {	
-    // set FINGER movement parameters 
+	// movement parameters
+	double trajMode = 4.0;	// trajectory mode (1||2||3||4)
+	int fingerToUse = 2;	// 0=index, 1=middle, 2=both fingers
+	double moveDur = 1500;	// NOTE: extendTime & flexTime must be > moveDur!!!
+
+	// subject initiation of movement settings (if necessary)
+	double v_thresh = 0.227;// velocity threshold that indicates movement
+	double f_thresh = 0.29; // force threshold that indicates movement
+	double maxTD = 1.0;		// time before movement to sense movement
+
+	// movement timing
+	double flexPos = 1;		// final flexion target position (max 1)
+	double flexTime = 2;	// flexion movement time (sec), from time set
+	
+	double extendPos = 0;	// final extension target position (min 0)
+	double extendTime = 2;	// extension movement time (sec), from time set	
+
+	// sending FINGER movement parameters to the robot
     finger.setForcesOn(true);
     finger.setKp(2.0, 2);
-    finger.setKd(0.2, 2);	             
-    finger.setTrajMode(1.0);          
-
-	// mode 1 settings (if necessary)
-	finger.setVThresh(0.2227);
-	finger.setFThresh(0.29);
-	finger.setMaxTrajDur(0.75);
-
-	// movement parameters
-	double flexPos = 1;
-	double flexTime = 1.4;
-	double extendPos = 0;
-
-	double extendTime = 1.2;
-	int fingerToUse = 0;
-	double moveDur = 2000; //NOTE: extendTime & flexTime must be > moveDur!!!
+    finger.setKd(0.2, 2);	
+    finger.setTrajMode(trajMode);        
+	finger.setMovementDuration(moveDur);	
+	finger.setVThresh(v_thresh);	
+	finger.setFThresh(f_thresh);	
+	finger.setMaxTrajDur(maxTD); 
 
 	// wait for initialization
-	while(finger.getTargetTime() < 5){
-		Sleep(250);
+	while(finger.getTargetTime() < 5){		
 		printUpdate();
 	}
 
-	// flexion 		
-	ctt= 1000.0*flexTime + 1000.0*finger.getTargetTime();                   
-    finger.setHitPos(flexPos,fingerToUse);    
-	finger.setMovementDuration(moveDur);
-	finger.setHitTimes(ctt,fingerToUse);  
-	while(finger.getTargetTime()*1000.0 < ctt+2*moveDur){
-		Sleep(250); 		 
-		printUpdate();	 
-	}       	
+	// create an example set of movements
+	for (int i=0; i<3; ++i){
+		// flexion 		
+		ctt= 1000.0*flexTime + 1000.0*finger.getTargetTime();                   
+		finger.setHitPos(flexPos,fingerToUse);    		
+		finger.setHitTimes(ctt,fingerToUse);  
+		while(finger.getTargetTime()*1000.0 < ctt+moveDur){			
+			printUpdate();	 
+		}		
+		Sleep(1000);
 
-	/*// extension 
-	ctt= 1000.0*extendTime + 1000.0*finger.getTargetTime();                    
-    finger.setHitPos(extendPos,fingerToUse);    
-	finger.setMovementDuration(moveDur);    
-	finger.setHitTimes(ctt,fingerToUse);
-	while(finger.getTargetTime()*1000.0 < ctt+2*moveDur){
-		Sleep(250); 		 
-		printUpdate();	 
-	} 
-	Sleep(1000);*/
+		// extension (if we are in a no-return mode)
+		if (trajMode == 3.0 || trajMode == 4.0){			
+			ctt= 1000.0*extendTime + 1000.0*finger.getTargetTime();                    
+			finger.setHitPos(extendPos,fingerToUse);    			  
+			finger.setHitTimes(ctt,fingerToUse);
+			while(finger.getTargetTime()*1000.0 < ctt+moveDur){				 
+				printUpdate();	 
+			} 
+			Sleep(1000);
+		}
+	}
       
-	// display results and clean up
-	Sleep(2000);
+	// display results and clean up	
     finger.cleanUp();
     return 0;
 }
