@@ -69,7 +69,7 @@ void FingerBot::autoSetHandMode(){
 '' duration argument is in miliseconds
 */
 void FingerBot::setMovementDuration(double dur){
-    setParamByName("fixedDur", dur / 1000);
+    setParamByName("fixedDur", dur);
 }
 
 /**---------------------------- set hit times ---------------------------------//
@@ -81,14 +81,14 @@ void FingerBot::setHitTimes(double hitTime,int fNum){
 	upcomingMove.time = hitTime;
 	switch(fNum){
 	case 0:
-        setParamByName("hitTime1", (hitTime / 1000.0));
+        setParamByName("hitTime1", (hitTime));
 		break;
 	case 1:
-        setParamByName("hitTime2", (hitTime / 1000.0));
+        setParamByName("hitTime2", (hitTime));
 		break;
 	case 2:
-        setParamByName("hitTime1", (hitTime / 1000.0));
-        setParamByName("hitTime2", (hitTime / 1000.0));
+        setParamByName("hitTime1", (hitTime));
+        setParamByName("hitTime2", (hitTime));
 		break;
 	}
 	//std::cout << "set hit time to " << hitTime << "for finger code " << fNum << std::endl;
@@ -143,7 +143,7 @@ void FingerBot::setFThresh(double setting){
 	setParamByName("f_thresh", setting);
 }
 void FingerBot::setMaxTrajDur(double setting){
-	setParamByName("maxTrajDur", setting);
+	setParamByName("maxTrajDur", (setting));
 }
 
 
