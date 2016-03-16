@@ -229,6 +229,19 @@ void FingerBot::setGainChangeRate(double rate){
     }
 }
 
+/**------------------- get feedback on time to threshold ----------------------//
+*/
+double FingerBot::getFeedback(int fNum){
+	if (fNum == 0) {
+        return getSignalByName("feedback1");
+    } else if (fNum == 1) {
+        return getSignalByName("feedback2");
+    } else if (fNum == 2) {
+        return (getSignalByName("feedback1")+getSignalByName("feedback2"))/2;        
+    }
+    
+}
+
 /**------------------------------- get prop gains -----------------------------//
 */
 void FingerBot::getPropGains(double& kp1, double& kp2){
@@ -316,6 +329,8 @@ void FingerBot::loadIdMap(){
     signalMap.insert(std::make_pair("lcF2b", findSignal("signals/sigLoadCF2b")));
     signalMap.insert(std::make_pair("lcReference", findSignal("signals/sigLoadC")));
     signalMap.insert(std::make_pair("orientAccel", findSignal("signals/sigGravAccel")));	
+	signalMap.insert(std::make_pair("feedback1",findSignal("signals/sigTimeToThresh1")));
+	signalMap.insert(std::make_pair("feedback2",findSignal("signals/sigTimeToThresh2")));
 
 	paramMap.insert(std::make_pair("v_thresh",findParam("parameters/parVThresh", "Gain")));
     paramMap.insert(std::make_pair("f_thresh",findParam("parameters/parFThresh", "Gain")));

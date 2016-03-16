@@ -9,12 +9,15 @@ double curPos1;				//initialize position var to print later (finger 1)
 double curPos2;				//initialize position var to print later (finger 1)
 double currentTargetTime;	//initialize target time to print later
 double ctt;					//initialize movement time (based on target timer)
+double feedback1 = 0;		//initialize time-to-threshold feedback (use for GUI)
+double feedback2 = 0;		//initialize feedback for second finger
 
 // set parameters to connect to XPC target machine (initialize fingerbot)
 string ipAddress =	"129.101.53.73";		// UCI IP address 
 /*string ipAddress = "169.254.201.253";		// Wadsworth IP address */
 string ipPort =		"22222";
-string modelName =	"brainFINGER";		 
+string modelName =	"brainFINGER";	
+//string modelName =	"FingerEAERCtrl";
 FingerBot finger = FingerBot(ipAddress, ipPort, modelName);
 
 // function to print updates to the console
@@ -24,7 +27,7 @@ void printUpdate()
 	curPos2 = finger.getPos2();
 	cout << "\n position= " << curPos1 << "\t" ;		 		 
 	currentTargetTime = finger.getTargetTime();		 
-	cout << "target time = " << currentTargetTime << endl;	
+	cout << "target time = " << currentTargetTime << " sec" << endl;	
 	Sleep(1000); 		
 }
 
@@ -35,6 +38,11 @@ void printUpdate()
 int _tmain(int argc, _TCHAR* argv[])
 {	
 	/* movement parameter notes: 
+	A trial effectively begins when a new t-des is set. The robot uses a change
+	in this parameter to detect a new trial starting. Set this parameter last, 
+	and make sure to only set it when the trial actually begins. Errors in its 
+	use will cause errors in the feedback parameter values (time to threshold).
+
 	movement delay (moveDelay) must be greater than the movement duration! This 
 	is because the trajectory planner takes the desired time as the desired 
 	movement completion time. Thus, the movement start time is ctt-moveDur.
@@ -89,24 +97,32 @@ int _tmain(int argc, _TCHAR* argv[])
 		// if either finger is partially flexed, return to extension (else flex)
 		if ((finger.getPos1()>0.4) || (finger.getPos2()>0.4)){
 			nextPos = extendPos;
-			cout << "\n\n\n\n\n\n\n EXTEND! \n\n\n" ;
+			cout << "\n\n\n\n\n\n\n EXTEND! \n\n" ;
 		} else {			
 			nextPos = flexPos;
-			cout << "\n\n\n\n\n\n\n FLEX! \n\n\n" ;
+			cout << "\n\n\n\n\n\n\n FLEX! \n\n" ;
 		}		
-
-		// set movement parameters
-		ctt= moveDelay + finger.getTargetTime();                   
+		// set movement parameters				
 		finger.setHitPos(nextPos,fingerToUse);    		
+		ctt= moveDelay + finger.getTargetTime();     
 		finger.setHitTimes(ctt,fingerToUse);  
 		// wait for movement to complete (double time for return moves + 1sec)
-		while(finger.getTargetTime() < ctt+moveDur){						
+		while(finger.getTargetTime() < ctt+moveDur){		
+			// print the new feedback (if subject exceeded the force threshold)
+			if (finger.getFeedback(0) != feedback1){
+				feedback1 = finger.getFeedback(0);	
+				cout << "FINGER 1: " << feedback1 << " sec" << endl;
+			}	
+			if (finger.getFeedback(1) != feedback2){
+				feedback2 = finger.getFeedback(1);
+				cout << "FINGER 2: " << feedback2 << " sec" << endl;
+			}
 		}		
-		Sleep(1000);				
+		Sleep(1000);	
 	}
       
 
-	// display results and clean up	
+	//clean up	
     finger.cleanUp();
     return 0;
 }

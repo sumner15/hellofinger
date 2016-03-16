@@ -23,6 +23,7 @@ public:
 	void setKd(double kd, int finger);
 	std::string checkGainInRange(double val, bool propGain);
 	void setGainChangeRate(double rate);
+	double FingerBot::getFeedback(int fNum);	
 	void FingerBot::getPropGains(double& kp1, double& kp2);
 	double FingerBot::getPos1();
 	double FingerBot::getPos2();
