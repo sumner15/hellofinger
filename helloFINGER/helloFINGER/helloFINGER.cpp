@@ -16,8 +16,8 @@ double feedback2 = 0;		//initialize feedback for second finger
 string ipAddress =	"129.101.53.73";		// UCI IP address 
 /*string ipAddress = "169.254.201.253";		// Wadsworth IP address */
 string ipPort =		"22222";
-string modelName =	"brainFINGER";	
-//string modelName =	"FingerEAERCtrl";
+//string modelName =	"brainFINGER";	
+string modelName =	"FingerEAERCtrl";
 FingerBot finger = FingerBot(ipAddress, ipPort, modelName);
 
 // function to print updates to the console
@@ -43,7 +43,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	and make sure to only set it when the trial actually begins. Errors in its 
 	use will cause errors in the feedback parameter values (time to threshold).
 
-	movement delay (moveDelay) must be greater than the movement duration! This 
+	maxTD (max thresh detect t) must be greater than the movement duration! This 
 	is because the trajectory planner takes the desired time as the desired 
 	movement completion time. Thus, the movement start time is ctt-moveDur.
 
@@ -66,13 +66,12 @@ int _tmain(int argc, _TCHAR* argv[])
 	// movement timing
 	double nextPos = 0;				// next position (just initialized here)
 	const double flexPos = 1;		// final flexion target position (max 1)
-	const double extendPos = 0;		// final extension target position (min 0)	
-	const double moveDelay = 1.7;	// movement completion time from time set
+	const double extendPos = 0;		// final extension target position (min 0)		
 
 	// subject initiation of movement settings (modes 1 & 4)
 	const double v_thresh = 0.100;	// velocity threshold that indicates movement
-	const double f_thresh = 0.100;	// force threshold that indicates movement
-	const double maxTD = 1.5;		// time before tDes to sense movement 
+	const double f_thresh = 2.000;	// force threshold that indicates movement
+	const double maxTD = 5.0;		// t before tDes to sense move (mode 1 only)
 
 
 
@@ -93,7 +92,7 @@ int _tmain(int argc, _TCHAR* argv[])
 
 
 	// create an example set of movements
-	for (int i=0; i<10; ++i){
+	for (int i=0; i<20; ++i){
 		// if either finger is partially flexed, return to extension (else flex)
 		if ((finger.getPos1()>0.4) || (finger.getPos2()>0.4)){
 			nextPos = extendPos;
@@ -104,9 +103,9 @@ int _tmain(int argc, _TCHAR* argv[])
 		}		
 		// set movement parameters				
 		finger.setHitPos(nextPos,fingerToUse);    		
-		ctt= moveDelay + finger.getTargetTime();     
+		ctt= maxTD + finger.getTargetTime();     
 		finger.setHitTimes(ctt,fingerToUse);  
-		// wait for movement to complete (double time for return moves + 1sec)
+		// wait for movement to complete 
 		while(finger.getTargetTime() < ctt+moveDur){		
 			// print the new feedback (if subject exceeded the force threshold)
 			if (finger.getFeedback(0) != feedback1){
