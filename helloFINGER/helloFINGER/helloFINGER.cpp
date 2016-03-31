@@ -8,7 +8,7 @@ using namespace std;
 double curPos1;				//initialize position var to print later (finger 1)
 double curPos2;				//initialize position var to print later (finger 1)
 double currentTargetTime;	//initialize target time to print later
-double ctt;					//initialize movement time (based on target timer)
+double hitTime;				//initialize movement time (based on target timer)
 double feedback1 = 0;		//initialize time-to-threshold feedback (use for GUI)
 double feedback2 = 0;		//initialize feedback for second finger
 
@@ -45,7 +45,7 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	maxTD (max thresh detect t) must be greater than the movement duration! This 
 	is because the trajectory planner takes the desired time as the desired 
-	movement completion time. Thus, the movement start time is ctt-moveDur.
+	movement completion time. Thus, the movement start time is hitTime-moveDur.
 
 	All values are now in seconds! None of the parameters use milliseconds.
 
@@ -65,16 +65,13 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	// movement timing
 	double nextPos = 0;				// next position (just initialized here)
-	const double flexPos = 1;		// final flexion target position (max 1)
-	const double extendPos = 0;		// final extension target position (min 0)		
+	const double flexPos = .95;		// final flexion target position (max 1)
+	const double extendPos = .05;	// final extension target position (min 0)		
 
 	// subject initiation of movement settings (modes 1 & 4)
 	const double v_thresh = 0.100;	// velocity threshold that indicates movement
 	const double f_thresh = 2.000;	// force threshold that indicates movement
 	const double maxTD = 5.0;		// t before tDes to sense move (mode 1 only)
-
-
-
 
 	// sending FINGER movement parameters to the robot
     finger.setForcesOn(true);
@@ -86,13 +83,13 @@ int _tmain(int argc, _TCHAR* argv[])
 	finger.setFThresh(f_thresh);	
 	finger.setMaxTrajDur(maxTD); 
 	// wait for initialization
-	while(finger.getTargetTime() < 5.25){		
+	while(finger.getTargetTime() < 5.1){		
 		printUpdate();
 	}
 
 
 	// create an example set of movements
-	for (int i=0; i<20; ++i){
+	for (int i=0; i<10; ++i){
 		// if either finger is partially flexed, return to extension (else flex)
 		if ((finger.getPos1()>0.4) || (finger.getPos2()>0.4)){
 			nextPos = extendPos;
@@ -103,10 +100,10 @@ int _tmain(int argc, _TCHAR* argv[])
 		}		
 		// set movement parameters				
 		finger.setHitPos(nextPos,fingerToUse);    		
-		ctt= maxTD + finger.getTargetTime();     
-		finger.setHitTimes(ctt,fingerToUse);  
+		hitTime = maxTD + finger.getTargetTime();     
+		finger.setHitTimes(hitTime,fingerToUse);  
 		// wait for movement to complete 
-		while(finger.getTargetTime() < ctt+moveDur){		
+		while(finger.getTargetTime() < hitTime){		
 			// print the new feedback (if subject exceeded the force threshold)
 			if (finger.getFeedback(0) != feedback1){
 				feedback1 = finger.getFeedback(0);	

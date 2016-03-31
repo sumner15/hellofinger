@@ -40,3 +40,4 @@ helloFINGER/helloFINGER/helloFINGER.vcxproj.orig
 helloFINGER/helloFINGER/helloFINGER.cpp.orig
 helloFINGER/helloFINGER.sdf
 *.ipch
+*.zip
