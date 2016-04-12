@@ -13,11 +13,11 @@ double feedback1 = 0;		//initialize time-to-threshold feedback (use for GUI)
 double feedback2 = 0;		//initialize feedback for second finger
 
 // set parameters to connect to XPC target machine (initialize fingerbot)
-string ipAddress =	"129.101.53.73";		// UCI IP address 
-/*string ipAddress = "169.254.201.253";		// Wadsworth IP address */
+/*string ipAddress =	"129.101.53.73";		// UCI IP address  */
+string ipAddress = "169.254.201.253";		// Wadsworth IP address 
 string ipPort =		"22222";
 //string modelName =	"brainFINGER";	
-string modelName =	"FingerEAERCtrl";
+string modelName =	"FingerEAERCtrl1";
 FingerBot finger = FingerBot(ipAddress, ipPort, modelName);
 
 // function to print updates to the console
@@ -61,7 +61,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	// movement parameters
 	const double trajMode = 4.0;	// trajectory mode (1||2||3||4)
 	const int fingerToUse = 2;		// 0=index, 1=middle, 2=both fingers
-	const double moveDur = 1.0;		// movement duration
+	const double moveDur = .7;		// movement duration
 
 	// movement timing
 	double nextPos = 0;				// next position (just initialized here)
@@ -89,7 +89,7 @@ int _tmain(int argc, _TCHAR* argv[])
 
 
 	// create an example set of movements
-	for (int i=0; i<10; ++i){
+	for (int i=0; i<20; ++i){
 		// if either finger is partially flexed, return to extension (else flex)
 		if ((finger.getPos1()>0.4) || (finger.getPos2()>0.4)){
 			nextPos = extendPos;
