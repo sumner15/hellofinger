@@ -8,16 +8,16 @@ using namespace std;
 double curPos1;				//initialize position var to print later (finger 1)
 double curPos2;				//initialize position var to print later (finger 1)
 double currentTargetTime;	//initialize target time to print later
-double hitTime;				//initialize movement time (based on target timer)
+double ctt;				//initialize movement time (based on target timer)
 double feedback1 = 0;		//initialize time-to-threshold feedback (use for GUI)
 double feedback2 = 0;		//initialize feedback for second finger
 
 // set parameters to connect to XPC target machine (initialize fingerbot)
-/*string ipAddress =	"129.101.53.73";		// UCI IP address  */
-string ipAddress = "169.254.201.253";		// Wadsworth IP address 
+string ipAddress =	"129.101.53.73";		// UCI IP address   
+/* string ipAddress = "169.254.201.253";		// Wadsworth IP address */
 string ipPort =		"22222";
-//string modelName =	"brainFINGER";	
-string modelName =	"FingerEAERCtrl1";
+string modelName =	"brainFINGER";	
+/* string modelName =	"FingerEAERCtrl"; */
 FingerBot finger = FingerBot(ipAddress, ipPort, modelName);
 
 // function to print updates to the console
@@ -45,7 +45,7 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	maxTD (max thresh detect t) must be greater than the movement duration! This 
 	is because the trajectory planner takes the desired time as the desired 
-	movement completion time. Thus, the movement start time is hitTime-moveDur.
+	movement completion time. Thus, the movement start time is ctt-moveDur.
 
 	All values are now in seconds! None of the parameters use milliseconds.
 
@@ -59,7 +59,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	*/
 
 	// movement parameters
-	const double trajMode = 4.0;	// trajectory mode (1||2||3||4)
+	double trajMode = 4.0;			// trajectory mode (1||2||3||4)
 	const int fingerToUse = 2;		// 0=index, 1=middle, 2=both fingers
 	const double moveDur = .7;		// movement duration
 
@@ -83,39 +83,46 @@ int _tmain(int argc, _TCHAR* argv[])
 	finger.setFThresh(f_thresh);	
 	finger.setMaxTrajDur(maxTD); 
 	// wait for initialization
-	while(finger.getTargetTime() < 5.1){		
+	while(finger.getTargetTime() < 5.25){		
 		printUpdate();
 	}
 
 
-	// create an example set of movements
-	for (int i=0; i<20; ++i){
-		// if either finger is partially flexed, return to extension (else flex)
-		if ((finger.getPos1()>0.4) || (finger.getPos2()>0.4)){
-			nextPos = extendPos;
-			cout << "\n\n\n\n\n\n\n EXTEND! \n\n" ;
-		} else {			
-			nextPos = flexPos;
-			cout << "\n\n\n\n\n\n\n FLEX! \n\n" ;
-		}		
-		// set movement parameters				
+	// create an example set of movements (flex mode 4, auto-extend mode 3)
+	for (int i=0; i<10; ++i){
+		nextPos = flexPos;
+		finger.setTrajMode(4.0); // movement detection
+		cout << "\n\n\n\n\n\n\n FLEX! \n\n" ;
 		finger.setHitPos(nextPos,fingerToUse);    		
-		hitTime = maxTD + finger.getTargetTime();     
-		finger.setHitTimes(hitTime,fingerToUse);  
+		ctt = maxTD + finger.getTargetTime();     
+		finger.setHitTimes(ctt,fingerToUse); 		
+		feedback1 = finger.getFeedback(0);	
+		feedback2 = finger.getFeedback(1);	
+
 		// wait for movement to complete 
-		while(finger.getTargetTime() < hitTime){		
+		while(finger.getTargetTime() < (ctt + 0.5)){		
 			// print the new feedback (if subject exceeded the force threshold)
 			if (finger.getFeedback(0) != feedback1){
 				feedback1 = finger.getFeedback(0);	
-				cout << "FINGER 1: " << feedback1 << " sec" << endl;
+				cout << "FINGER 1 detected " << feedback1 << " sec" << endl;
 			}	
 			if (finger.getFeedback(1) != feedback2){
 				feedback2 = finger.getFeedback(1);
-				cout << "FINGER 2: " << feedback2 << " sec" << endl;
+				cout << "FINGER 2 detected " << feedback2 << " sec" << endl;
 			}
-		}		
-		Sleep(1000);	
-	}
+		}
+		
+		// if either finger is partially flexed, return to extension
+		if ((finger.getPos1()>0.4) || (finger.getPos2()>0.4)){
+			nextPos = extendPos;
+			finger.setTrajMode(3.0); // auto movement
+			cout << "\n\n\n\n\n\n\n Auto EXTEND (relax) \n\n" ;					
+			finger.setHitPos(nextPos,fingerToUse);    		
+			ctt = moveDur + 0.1 + finger.getTargetTime();     
+			finger.setHitTimes(ctt,fingerToUse); 
+			Sleep(1000*moveDur+500);			
+		} 			 					
+	} // end example movements for loop
       
 
 	//clean up	
