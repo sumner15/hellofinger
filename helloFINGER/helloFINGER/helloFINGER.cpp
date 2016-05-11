@@ -6,15 +6,16 @@ using namespace std;
 
 // define common variables
 double curPos1;				//initialize position var to print later (finger 1)
-double curPos2;				//initialize position var to print later (finger 1)
+double curPos2;				//initialize position var to print later (finger 2)
+double curForce1;			//initialize force var to print (finger 1)
 double currentTargetTime;	//initialize target time to print later
-double ctt;				//initialize movement time (based on target timer)
+double ctt;					//initialize movement time (based on target timer)
 double feedback1 = 0;		//initialize time-to-threshold feedback (use for GUI)
 double feedback2 = 0;		//initialize feedback for second finger
 
 // set parameters to connect to XPC target machine (initialize fingerbot)
-//string ipAddress =	"129.101.53.73";		// UCI IP address   
-string ipAddress = "169.254.201.253";		// Wadsworth IP address 
+string ipAddress =	"129.101.53.73";		// UCI IP address   
+//string ipAddress = "169.254.201.253";		// Wadsworth IP address 
 string ipPort =		"22222";
 string modelName =	"brainFINGER";	
 //string modelName =	"FingerEAERCtrl"; 
@@ -25,9 +26,11 @@ void printUpdate()
 {
 	curPos1 = finger.getPos1();
 	curPos2 = finger.getPos2();
+	curForce1 = finger.getForce1();	
 	cout << "\n position= " << curPos1 << "\t" ;		 		 
 	currentTargetTime = finger.getTargetTime();		 
-	cout << "target time = " << currentTargetTime << " sec" << endl;	
+	cout << "target time = " << currentTargetTime << " sec" << "\t";
+	cout << "force = " << curForce1 << endl;	
 	Sleep(1000); 		
 }
 

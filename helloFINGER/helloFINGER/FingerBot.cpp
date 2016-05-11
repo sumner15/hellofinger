@@ -258,6 +258,15 @@ double FingerBot::getPos2(){
 	return getSignalByName("pos2");	
 }
 
+/**-------------------------- get the robot forces ----------------------------//
+*/
+double FingerBot::getForce1(){
+	return getSignalByName("force1");	
+}
+double FingerBot::getForce2(){
+	return getSignalByName("force2");	
+}
+
 /**----------------------- set the purse viscosity gains ----------------------//
 */
 void FingerBot::setViscGains(double gain, int fNum){
