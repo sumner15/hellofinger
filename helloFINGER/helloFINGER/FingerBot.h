@@ -29,6 +29,8 @@ public:
 	double FingerBot::getPos2();
 	double FingerBot::getForce1();
 	double FingerBot::getForce2();
+	double FingerBot::getForceF1();
+	double FingerBot::getForceF2();
 	void setViscGains(double gain, int fNum);
 	double FingerBot::getTargetTime();
 

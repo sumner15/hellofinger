@@ -7,7 +7,8 @@ using namespace std;
 // define common variables
 double curPos1;				//initialize position var to print later (finger 1)
 double curPos2;				//initialize position var to print later (finger 2)
-double curForce1;			//initialize force var to print (finger 1)
+double curForce1;			//initialize estimated (from controller) force to print (finger 1)
+double curForceF1;			//initialize actual froce from load cell (finger 1)
 double currentTargetTime;	//initialize target time to print later
 double ctt;					//initialize movement time (based on target timer)
 double feedback1 = 0;		//initialize time-to-threshold feedback (use for GUI)
@@ -27,10 +28,12 @@ void printUpdate()
 	curPos1 = finger.getPos1();
 	curPos2 = finger.getPos2();
 	curForce1 = finger.getForce1();	
-	cout << "\n position= " << curPos1 << "\t" ;		 		 
+	curForceF1 = finger.getForceF1();	
 	currentTargetTime = finger.getTargetTime();		 
-	cout << "target time = " << currentTargetTime << " sec" << "\t";
-	cout << "force = " << curForce1 << endl;	
+	cout << "\n target time = " << currentTargetTime << " sec" << "\t";
+	cout << "position= " << curPos1 << "\t" ;		 		 		
+	cout << "force est.= " << curForce1 << endl;	
+	cout << "force act.= " << curForceF1 << endl;	
 	Sleep(1000); 		
 }
 
