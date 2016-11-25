@@ -2,17 +2,22 @@
 #include <windows.h>
 #include "FingerBot.h"
 #include <iostream>
+#include <iomanip>
+#include <math.h>
 using namespace std;
 
 // define common variables
 double curPos1;				//initialize position var to print later (finger 1)
 double curPos2;				//initialize position var to print later (finger 2)
 double curForce1;			//initialize estimated (from controller) force to print (finger 1)
-double curForceF1;			//initialize actual froce from load cell (finger 1)
+double curForceF1a;			//initialize actual froce from load cell (finger 1a)
+double curForceF1b;			
+double curForceF2a;
+double curForceF2b;
 double currentTargetTime;	//initialize target time to print later
 double ctt;					//initialize movement time (based on target timer)
-double feedback1 = 0;		//initialize time-to-threshold feedback (use for GUI)
-double feedback2 = 0;		//initialize feedback for second finger
+double feedback0 = 0;		//initialize time-to-threshold feedback (use for GUI)
+double feedback1 = 0;		//initialize feedback for second finger
 
 // set parameters to connect to XPC target machine (initialize fingerbot)
 string ipAddress =	"129.101.53.73";		// UCI IP address   
@@ -26,15 +31,19 @@ FingerBot finger = FingerBot(ipAddress, ipPort, modelName);
 void printUpdate()
 {
 	curPos1 = finger.getPos1();
-	curPos2 = finger.getPos2();
-	curForce1 = finger.getForce1();	
-	curForceF1 = finger.getForceF1();	
+	curPos2 = finger.getPos2();	
 	currentTargetTime = finger.getTargetTime();		 
-	cout << "\n target time = " << currentTargetTime << " sec" << "\t";
-	cout << "position= " << curPos1 << "\t" ;		 		 		
-	cout << "force est.= " << curForce1 << endl;	
-	cout << "force act.= " << curForceF1 << endl;	
-	Sleep(1000); 		
+	cout << "\n target time = " << fixed << setprecision(2) << currentTargetTime << " sec" << "\t" << "position= " << curPos1 << "\t" << curPos2 << "\t";		 		 			
+	Sleep(200); 		
+}
+void printForces()
+{
+	curForceF1a = finger.getForceF1a();	
+	curForceF1b = finger.getForceF1b();	
+	curForceF2a = finger.getForceF2a();	
+	curForceF2b = finger.getForceF2b();	
+	cout << "F1a " << fixed << setprecision(3) << curForceF1a << "   F1b " << curForceF1b << "   F2a " <<curForceF2a << "   F2b " << curForceF2b << endl;
+	Sleep(60);
 }
 
 
@@ -106,29 +115,34 @@ int _tmain(int argc, _TCHAR* argv[])
 		finger.setHitTimes(ctt,fingerToUse); 				
 
 		// wait for movement to complete 
-		feedback1 = finger.getFeedback(0);	
-		feedback2 = finger.getFeedback(1);	
-		while(finger.getTargetTime() < (ctt + 0.5)){		
+		feedback0 = finger.getFeedback(0);	
+		feedback1 = finger.getFeedback(1);	
+		while(finger.getTargetTime() < (ctt + 0.5)){	
+		//while(true){
+			// transducer force data stream
+			printForces();
 			// print the new feedback (if subject exceeded the force threshold)
-			if (finger.getFeedback(0) != feedback1){
-				feedback1 = finger.getFeedback(0);	
-				cout << "FINGER 1 Force detect " << feedback1 << " sec" << endl;
+			if (finger.getFeedback(0) != feedback0){
+				feedback0 = finger.getFeedback(0);	
+				//cout << "FINGER 1 Force detect " << feedback1 << " sec" << endl;
 			}	
-			if (finger.getFeedback(1) != feedback2){
-				feedback2 = finger.getFeedback(1);
-				cout << "FINGER 2 Force detect " << feedback2 << " sec" << endl;
+			if (finger.getFeedback(1) != feedback1){
+				feedback1 = finger.getFeedback(1);
+				//cout << "FINGER 2 Force detect " << feedback2 << " sec" << endl;
 			}
 		}
 		
 		// if either finger is partially flexed, return to extension
 		if ((finger.getPos1()>0.4) || (finger.getPos2()>0.4)){
 			nextPos = extendPos;
-			cout << "\n\n\n\n\n\n\n Auto EXTEND (relax) \n\n" ;		
+			cout << "\n Auto extend (RELAX) \n\n" ;		
 			finger.setTrajMode(3.0); // auto movement						
 			finger.setHitPos(nextPos,fingerToUse);    		
 			ctt = moveDur + 0.1 + finger.getTargetTime();     
-			finger.setHitTimes(ctt,fingerToUse); 
-			Sleep(1000*moveDur+500);	
+			finger.setHitTimes(ctt,fingerToUse); 			
+			while(finger.getTargetTime() < (ctt + 0.5)){
+				printForces();
+			}
 		} 			 					
 	} // end example movements for loop
       
