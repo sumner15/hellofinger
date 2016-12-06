@@ -10,10 +10,8 @@ using namespace std;
 double curPos1;				//initialize position var to print later (finger 1)
 double curPos2;				//initialize position var to print later (finger 2)
 double curForce1;			//initialize estimated (from controller) force to print (finger 1)
-double curForceF1a;			//initialize actual froce from load cell (finger 1a)
-double curForceF1b;			
-double curForceF2a;
-double curForceF2b;
+double curForceF1;			//initialize actual froce from load cell (finger 1a)
+double curForceF2;
 double currentTargetTime;	//initialize target time to print later
 double ctt;					//initialize movement time (based on target timer)
 double feedback0 = 0;		//initialize time-to-threshold feedback (use for GUI)
@@ -38,11 +36,9 @@ void printUpdate()
 }
 void printForces()
 {
-	curForceF1a = finger.getForceF1a();	
-	curForceF1b = finger.getForceF1b();	
-	curForceF2a = finger.getForceF2a();	
-	curForceF2b = finger.getForceF2b();	
-	cout << "F1a " << fixed << setprecision(3) << curForceF1a << "   F1b " << curForceF1b << "   F2a " <<curForceF2a << "   F2b " << curForceF2b << endl;
+	curForceF1 = finger.getForceF1();
+	curForceF2 = finger.getForceF2();	
+	cout << "F1 " << fixed << setprecision(3) << curForceF1 << "   F2 " << curForceF2 << endl;
 	Sleep(60);
 }
 
@@ -117,8 +113,8 @@ int _tmain(int argc, _TCHAR* argv[])
 		// wait for movement to complete 
 		feedback0 = finger.getFeedback(0);	
 		feedback1 = finger.getFeedback(1);	
-		while(finger.getTargetTime() < (ctt + 0.5)){	
-		//while(true){
+		//while(finger.getTargetTime() < (ctt + 0.5)){	
+		while(true){
 			// transducer force data stream
 			printForces();
 			// print the new feedback (if subject exceeded the force threshold)

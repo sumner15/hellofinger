@@ -269,11 +269,17 @@ double FingerBot::getForce2(){
 
 /**-------------------------- get the robot forces ----------------------------//
 */
+double FingerBot::getForceF1(){
+	return getSignalByName("lcF1");	
+}
 double FingerBot::getForceF1a(){
 	return getSignalByName("lcF1a");	
 }
 double FingerBot::getForceF1b(){
 	return getSignalByName("lcF1b");	
+}
+double FingerBot::getForceF2(){
+	return getSignalByName("lcF2");	
 }
 double FingerBot::getForceF2a(){
 	return getSignalByName("lcF2a");	
@@ -347,9 +353,11 @@ void FingerBot::loadIdMap(){
     signalMap.insert(std::make_pair("force1Clean", findSignal("signals/sigForce1Clean")));
     signalMap.insert(std::make_pair("force2Clean", findSignal("signals/sigForce2Clean")));
     signalMap.insert(std::make_pair("marker", findSignal("signals/sigMarker")));
+	signalMap.insert(std::make_pair("lcF1", findSignal("signals/sigLoadCF1")));
     signalMap.insert(std::make_pair("lcF1a", findSignal("signals/sigLoadCF1a")));
     signalMap.insert(std::make_pair("lcF1b", findSignal("signals/sigLoadCF1b")));
-    signalMap.insert(std::make_pair("lcF2a", findSignal("signals/sigLoadCF2a")));
+    signalMap.insert(std::make_pair("lcF2", findSignal("signals/sigLoadCF2")));
+	signalMap.insert(std::make_pair("lcF2a", findSignal("signals/sigLoadCF2a")));
     signalMap.insert(std::make_pair("lcF2b", findSignal("signals/sigLoadCF2b")));
     signalMap.insert(std::make_pair("lcReference", findSignal("signals/sigLoadC")));
     signalMap.insert(std::make_pair("orientAccel", findSignal("signals/sigGravAccel")));	
